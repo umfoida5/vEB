@@ -18,6 +18,7 @@ public class VEBTree
 		}
 		else
 		{
+			System.out.println("ERROR: Must create a tree with size a power of 2!");
 			return null;
 		}
 	}	
@@ -33,11 +34,11 @@ public class VEBTree
 	
 	
 	/*
-	 * TODO. Delete x from the tree.
+	 * Delete x from the tree.
 	 */
 	public void delete(int x)
 	{
-		
+		deleteR(root, x);
 	}
 	
 	
@@ -56,33 +57,6 @@ public class VEBTree
 	public int predecessor(int x)
 	{
 		return predecessorR(root, x);
-	}
-	
-	
-	public int predecessorR(VEBNode node, int x)
-	{
-		int highOfX;
-		if(NULL == node.min || x < node.min)
-		{
-			return NULL;
-		}
-		else if(x >= node.max)
-		{
-			return node.max;
-		}
-		else if(BASE_SIZE == node.universeSize)
-		{
-			return 0;
-		}
-		else if(NULL != node.cluster[highOfX = high(node, x)].min && low(node, x) >= node.cluster[highOfX].min)
-		{
-			return index(node, highOfX, predecessorR(node.cluster[highOfX], low(node, x)));
-		}
-		else
-		{
-			int summaryPred = predecessorR(node.summary, highOfX - 1);
-			return index(node, summaryPred, node.cluster[summaryPred].max);
-		}
 	}
 	
 	
@@ -158,6 +132,59 @@ public class VEBTree
 	}
 	
 	
+	private void deleteR(VEBNode node, int x)
+	{
+		if(node.min == node.max)
+		{
+			node.min = NULL;
+			node.max = NULL;
+		}
+		else if(BASE_SIZE == node.universeSize)
+		{
+			if(0 == x)
+			{
+				node.min = 1;
+			}
+			else
+			{
+				node.min = 0;
+			}
+			node.max = node.min;
+		}
+		else if(x == node.min)
+		{
+			int summaryMin = node.summary.min;
+			x = index(node, summaryMin, node.cluster[summaryMin].min);
+			node.min = x;
+			
+			int highOfX = high(node, x);
+			int lowOfX = low(node, x);
+			deleteR(node.cluster[highOfX], lowOfX);
+			
+			if(NULL == node.cluster[highOfX].min)
+			{
+				deleteR(node.summary, highOfX);
+				if(x == node.max)
+				{
+					int summaryMax = node.summary.max;
+					if(NULL == summaryMax)
+					{
+						node.max = node.min;
+					}
+					else
+					{
+						node.max = index(node, summaryMax, node.cluster[summaryMax].max);
+					}
+				}
+			}
+			else if(x == node.max)
+			{
+				node.max = index(node, highOfX, node.cluster[highOfX].max);
+			}
+		}
+	}
+	
+	
 	private boolean searchR(VEBNode node, int x)
 	{
 		if(x == node.min || x == node.max)
@@ -171,6 +198,33 @@ public class VEBTree
 		else
 		{
 			return searchR(node.cluster[high(node, x)], low(node, x));
+		}
+	}
+	
+	
+	public int predecessorR(VEBNode node, int x)
+	{
+		int highOfX;
+		if(NULL == node.min || x < node.min)
+		{
+			return NULL;
+		}
+		else if(x >= node.max)
+		{
+			return node.max;
+		}
+		else if(BASE_SIZE == node.universeSize)
+		{
+			return 0;
+		}
+		else if(NULL != node.cluster[highOfX = high(node, x)].min && low(node, x) >= node.cluster[highOfX].min)
+		{
+			return index(node, highOfX, predecessorR(node.cluster[highOfX], low(node, x)));
+		}
+		else
+		{
+			int summaryPred = predecessorR(node.summary, highOfX - 1);
+			return index(node, summaryPred, node.cluster[summaryPred].max);
 		}
 	}
 	
