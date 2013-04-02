@@ -1,30 +1,41 @@
 package vEB;
 
 public class VEBNode
-{
-	public static int INVALID_VALUE = -1;
-	
+{	
 	public int universeSize;
 	public int min;
 	public int max;
 	public VEBNode summary;
 	public VEBNode[] cluster;
 	
-	public VEBNode()
+	public VEBNode(int universeSize)
 	{
-		universeSize = 0;
-		min = 0;
-		max = 0;
-		summary = null;
-		cluster = null;
+		this.universeSize = universeSize;
+		min = VEBTree.NULL;
+		max = VEBTree.NULL;	
+		
+		/* Allocate the summary and cluster children. */
+		initializeChildren(universeSize);
 	}
 	
-	public VEBNode(int size, int min, int max, VEBNode summary, VEBNode[] cluster)
+	private void initializeChildren(int universeSize)
 	{
-		this.universeSize = size;
-		this.min = min;
-		this.max = max;
-		this.summary = summary;
-		this.cluster = cluster;
+		if(universeSize <= VEBTree.BASE_SIZE)
+		{
+			summary = null;
+			cluster = null;
+		}
+		else
+		{
+			int childUnivereSize = (int)Math.sqrt(universeSize);
+			
+			summary = new VEBNode(childUnivereSize);
+			cluster = new VEBNode[childUnivereSize];
+			
+			for(int i = 0; i < childUnivereSize; i++)
+			{
+				cluster[i] = new VEBNode(childUnivereSize);
+			}
+		} 
 	}
 }
