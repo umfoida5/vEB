@@ -262,15 +262,6 @@ public class VEBTree
 	
 	
 	/*
-	 * Returns the value of the most significant bits of x.
-	 */
-	private double higherSquareRoot(VEBNode node)
-	{
-		return Math.pow(2, Math.ceil((Math.log10(node.universeSize) / Math.log10(2)) / 2));
-	}
-	
-	
-	/*
 	 * Returns the integer value of the second half of the bits of x.
 	 */
 	private int low(VEBNode node, int x)
@@ -285,7 +276,7 @@ public class VEBTree
 	private double lowerSquareRoot(VEBNode node)
 	{
 		/* Change bases to 2 since java api does not support this. */
-		return Math.pow(2, Math.floor((Math.log10(node.universeSize) / Math.log10(2)) / 2));
+		return Math.pow(2, Math.floor((Math.log10(node.universeSize) / Math.log10(2)) / 2.0));
 	}
 	
 	

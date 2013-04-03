@@ -27,7 +27,7 @@ public class VEBNode
 		}
 		else
 		{
-			int childUnivereSize = (int)Math.sqrt(universeSize);
+			int childUnivereSize = higherSquareRoot();
 			
 			summary = new VEBNode(childUnivereSize);
 			cluster = new VEBNode[childUnivereSize];
@@ -37,5 +37,13 @@ public class VEBNode
 				cluster[i] = new VEBNode(childUnivereSize);
 			}
 		} 
+	}
+	
+	/*
+	 * Returns the value of the most significant bits of x.
+	 */
+	private int higherSquareRoot()
+	{
+		return (int)Math.pow(2, Math.ceil((Math.log10(universeSize) / Math.log10(2)) / 2));
 	}
 }
