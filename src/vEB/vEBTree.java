@@ -97,37 +97,37 @@ public class VEBTree
 		/* This node is empty */
 		if(NULL == node.min)
 		{
-			node.min = x;
-			node.max = x;
+		    node.min = x;
+		    node.max = x;
 		}
 		if(x < node.min)
 		{
-			int tempValue = x;
-			x = node.min;
-			node.min = tempValue;
+		    int tempValue = x;
+		    x = node.min;
+		    node.min = tempValue;
 		}
-		if(x > node.min || node.universeSize > BASE_SIZE)
+		if(x > node.min && node.universeSize > BASE_SIZE)
 		{
-			int highOfX = high(node, x);
-			int lowOfX = low(node, x);
-			
-			/* Case when the cluster is non-empty*/
-			if(NULL != node.cluster[highOfX].min)
-			{
-				/* Insert into the cluster recursively */
-				insertR(node.cluster[highOfX], lowOfX);
-			}
-			else
-			{
-				/* Insert into the summary recursively */
-				insertR(node.summary, highOfX);
-				node.cluster[highOfX].min = lowOfX;
-				node.cluster[highOfX].max = lowOfX;
-			}
+		    int highOfX = high(node, x);
+		    int lowOfX = low(node, x);
+		    
+		    /* Case when the cluster is non-empty*/
+		    if(NULL != node.cluster[highOfX].min)
+		    {
+		        /* Insert into the cluster recursively */
+		        insertR(node.cluster[highOfX], lowOfX);
+		    }
+		    else
+		    {
+		        /* Insert into the summary recursively */
+		        insertR(node.summary, highOfX);
+		        node.cluster[highOfX].min = lowOfX;
+		        node.cluster[highOfX].max = lowOfX;
+		    }
 		}
 		if(x > node.max)
 		{
-			node.max = x;
+		    node.max = x;
 		}
 	}
 	
@@ -204,27 +204,50 @@ public class VEBTree
 	
 	public int predecessorR(VEBNode node, int x)
 	{
-		int highOfX;
-		if(NULL == node.min || x < node.min)
+		if(BASE_SIZE == node.universeSize)
 		{
-			return NULL;
+			if(1 == x && 0 == node.min)
+			{
+				return 0;
+			}
+			else
+			{
+				return NULL;
+			}
 		}
-		else if(x >= node.max)
+		else if(NULL != node.max && x > node.max)
 		{
 			return node.max;
 		}
-		else if(BASE_SIZE == node.universeSize)
-		{
-			return 0;
-		}
-		else if(NULL != node.cluster[highOfX = high(node, x)].min && low(node, x) >= node.cluster[highOfX].min)
-		{
-			return index(node, highOfX, predecessorR(node.cluster[highOfX], low(node, x)));
-		}
 		else
 		{
-			int summaryPred = predecessorR(node.summary, highOfX - 1);
-			return index(node, summaryPred, node.cluster[summaryPred].max);
+			int highOfX = high(node, x);
+			int lowOfX = low(node, x);
+			
+			int minCluster = node.cluster[highOfX].min;
+			if(NULL != minCluster && lowOfX > minCluster)
+			{
+				return index(node, highOfX, predecessorR(node.cluster[highOfX], lowOfX));
+			}
+			else
+			{
+				int clusterPred = predecessorR(node.summary, highOfX);
+				if(NULL == clusterPred)
+				{
+					if(NULL != node.min && x > node.min)
+					{
+						return node.min;
+					}
+					else
+					{
+						return NULL;
+					}
+				}
+				else
+				{
+					return index(node, clusterPred, node.cluster[clusterPred].max);
+				}
+			}
 		}
 	}
 	
