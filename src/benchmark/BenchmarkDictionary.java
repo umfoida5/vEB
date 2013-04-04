@@ -153,6 +153,9 @@ public class BenchmarkDictionary
 			}
 			System.out.println("Delete time = "+(System.currentTimeMillis()-startTime)+"ms.");
 			/* ********************** */
+			
+			insertReader.close();
+			deleteReader.close();
 		}
 		catch(Exception e)
 		{
@@ -196,6 +199,8 @@ public class BenchmarkDictionary
 			}
 			System.out.println("Search time = "+(System.currentTimeMillis()-startTime)+"ms.");
 			/* **************************** */
+			
+			insertReader.close();
 		}
 		catch(Exception e)
 		{
@@ -262,6 +267,9 @@ public class BenchmarkDictionary
 			}
 			System.out.println("Delete time = "+(System.currentTimeMillis()-startTime)+"ms.");
 			/* ********************** */
+			
+			insertReader.close();
+			deleteReader.close();
 		}
 		catch(Exception e)
 		{
@@ -310,6 +318,9 @@ public class BenchmarkDictionary
 			/* delete all elements */
 			/* this took much too long, removed test */
 			/* ********************** */
+			
+			insertReader.close();
+			deleteReader.close();
 		}
 		catch(Exception e)
 		{
