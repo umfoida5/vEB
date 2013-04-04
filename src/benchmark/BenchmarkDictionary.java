@@ -15,14 +15,16 @@ import cuckooHash.Cuckoo;
 
 public class BenchmarkDictionary
 {
-	public static int universeSize = 4194304;
+	public static int universeSize = 8388608;
 	public static String insertFile = "insertIntegers.txt";
 	public static String deleteFile = "deleteIntegers.txt";
 	
 	public static void main(String[] args) 
 	{
-		System.out.println(System.getProperty("sun.arch.data.model") );
-		System.out.println(Runtime.getRuntime().maxMemory());
+		/* See if we are running 64-bit Java */
+		//System.out.println(System.getProperty("sun.arch.data.model"));
+		/* See how much memory we have available */
+		//System.out.println(Runtime.getRuntime().maxMemory());
 		benchmarchDataStructures();
 	}
 
@@ -47,7 +49,7 @@ public class BenchmarkDictionary
 			
 			ArrayList<Integer> list = new ArrayList<Integer>();
 			
-			for(int i = 0; i < universeSize; i=i+2)
+			for(int i = 0; i < universeSize; i++)
 			{
 				list.add(i);
 			}
@@ -59,7 +61,7 @@ public class BenchmarkDictionary
 			Collections.shuffle(list);
 			Collections.shuffle(list);
 			
-			for(int i = 1; i <= list.size(); i++)
+			for(int i = 1; i <= list.size(); i=i+2)
 			{
 				if(i % 100 == 0)
 				{
@@ -307,12 +309,14 @@ public class BenchmarkDictionary
 			/* ************************** */
 			
 			/* search in the data structure */
+			/* this took much too long, removed test
 			startTime = System.currentTimeMillis();
 			for(int i = 0; i < universeSize; i++)
 			{
 				linkedList.contains(i);
 			}
 			System.out.println("Search time = "+(System.currentTimeMillis()-startTime)+"ms.");
+			*/
 			/* **************************** */
 			
 			/* delete all elements */
